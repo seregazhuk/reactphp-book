@@ -6,6 +6,7 @@
         "react/datagram": "^1.2",
         "react/http": "^0.7.4",
         "react/http-client": "^0.5.6",
-        "react/child-process": "^0.5.0"
+        "react/child-process": "^0.5.0",
+        "react/promise-timer": "^1.2"
     }
 }
