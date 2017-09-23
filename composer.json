@@ -3,6 +3,7 @@
         "react/event-loop": "^0.4.3",
         "react/promise": "^2.5",
         "react/socket": "^0.8.4",
-        "react/datagram": "^1.2"
+        "react/datagram": "^1.2",
+        "react/http": "^0.7.4"
     }
 }
