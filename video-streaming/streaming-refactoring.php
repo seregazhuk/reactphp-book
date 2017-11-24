@@ -29,7 +29,7 @@ class VideoStreaming
      * @param ServerRequestInterface $request
      * @return Response
      */
-    function __invoke(ServerRequestInterface $request)
+    public function __invoke(ServerRequestInterface $request)
     {
         $file = $this->getFilePath($request);
         if (empty($file)) {
@@ -45,11 +45,12 @@ class VideoStreaming
      */
     protected function makeResponseFromFile($filePath)
     {
-        if (!file_exists($filePath)) {
+        $fileStream = fopen($filePath, 'r');
+        if (!$fileStream) {
             return new Response(404, ['Content-Type' => 'text/plain'], "Video $filePath doesn't exist on server.");
         }
 
-        $stream = new ReadableResourceStream(fopen($filePath, 'r'), $this->eventLoop);
+        $stream = new ReadableResourceStream($fileStream, $this->eventLoop);
 
         return new Response(200, ['Content-Type' => mime_content_type($filePath)], $stream);
     }
