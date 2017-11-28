@@ -8,6 +8,7 @@
         "react/http-client": "^0.5.6",
         "react/child-process": "^0.5.0",
         "react/promise-timer": "^1.2",
-        "clue/block-react": "^1.2"
+        "clue/block-react": "^1.2",
+        "phpunit/phpunit": "^6.4"
     }
 }
