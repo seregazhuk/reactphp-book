@@ -40,7 +40,6 @@ class PromiseResolvesWithTest extends TestCase
     }
 }
 
-
 class CallableStub
 {
     public function __invoke()

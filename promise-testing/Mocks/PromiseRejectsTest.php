@@ -38,7 +38,6 @@ class PromiseRejectsTest extends TestCase
     }
 }
 
-
 class CallableStub
 {
     public function __invoke()

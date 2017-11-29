@@ -34,14 +34,11 @@ class PromiseRejectsWithTest extends TestCase
     public function assertCallableCalledOnceWithObjectOf($className)
     {
         $mock = $this->getMockBuilder(CallableStub::class)->getMock();
-        $mock
-            ->expects($this->once())->method('__invoke')
-            ->with($this->isInstanceOf($className));
+        $mock->expects($this->once())->method('__invoke')->with($this->isInstanceOf($className));
 
         return $mock;
     }
 }
-
 
 class CallableStub
 {
