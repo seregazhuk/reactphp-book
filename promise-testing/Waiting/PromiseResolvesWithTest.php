@@ -26,7 +26,7 @@ class PromiseResolvesWithTest extends TestCase
     }
 
     /** @test */
-    public function a_promise_resolves()
+    public function a_promise_resolves_with_a_value()
     {
         $deferred = new Deferred();
         $deferred->resolve('foo');

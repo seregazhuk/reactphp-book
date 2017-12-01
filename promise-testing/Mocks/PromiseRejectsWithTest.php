@@ -24,14 +24,14 @@ class PromiseRejectsWithTest extends TestCase
      */
     public function assertPromiseRejectsWith(PromiseInterface $promise, $exceptionClass)
     {
-        $promise->then(null, $this->assertCallableCalledOnceWithObjectOf($exceptionClass));
+        $promise->then(null, $this->assertCallableCalledOnceWithObject($exceptionClass));
     }
 
     /**
      * @param string $className
      * @return PHPUnit_Framework_MockObject_MockObject|callable
      */
-    public function assertCallableCalledOnceWithObjectOf($className)
+    public function assertCallableCalledOnceWithObject($className)
     {
         $mock = $this->getMockBuilder(CallableStub::class)->getMock();
         $mock->expects($this->once())->method('__invoke')->with($this->isInstanceOf($className));
