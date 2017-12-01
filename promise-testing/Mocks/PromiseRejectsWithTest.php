@@ -1,6 +1,6 @@
 <?php
 
-namespace tests;
+namespace tests\Mocks;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
