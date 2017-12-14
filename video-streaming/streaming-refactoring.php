@@ -47,7 +47,7 @@ class VideoStreaming
     {
         $fileStream = fopen($filePath, 'r');
         if (!$fileStream) {
-            return new Response(404, ['Content-Type' => 'text/plain'], "Video $filePath doesn't exist on server.");
+            return new Response(404, ['Content-Type' => 'text/plain'], "Specified video doesn't exist on server.");
         }
 
         $stream = new ReadableResourceStream($fileStream, $this->eventLoop);
