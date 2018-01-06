@@ -4,12 +4,15 @@
         "react/promise": "^2.5",
         "react/socket": "^0.8.4",
         "react/datagram": "^1.2",
-        "react/http": "^0.8",
+        "react/http": "0.8.0",
         "react/http-client": "^0.5.6",
         "react/child-process": "^0.5.0",
         "react/promise-timer": "^1.2",
         "clue/block-react": "^1.2",
         "phpunit/phpunit": "^6.4",
-        "react/promise-stream": "^1.1"
+        "react/promise-stream": "^1.1",
+        "middlewares/client-ip": "^0.7.0",
+        "for/http-middleware-psr15-adapter": "^0.3.0",
+        "middlewares/response-time": "^0.5.0"
     }
 }
