@@ -13,7 +13,7 @@ $server = new Server([
     function(ServerRequestInterface $request, callable $next) use ($loop) {
         $deferred = new \React\Promise\Deferred();
         $loop->addTimer(2, function() use ($next, $request, $deferred) {
-            echo 'Resolving request' . PHP_EOL;
+            echo date('H:i:s') .': Resolving request' . PHP_EOL;
             $deferred->resolve($next($request));
         });
 
