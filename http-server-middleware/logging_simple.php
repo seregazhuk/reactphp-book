@@ -9,7 +9,18 @@ use Psr\Http\Message\ServerRequestInterface;
 $loop = Factory::create();
 
 $server = new Server(function (ServerRequestInterface $request) {
-    echo date('Y-m-d H:i:s') . ' ' . $request->getMethod() . ' ' . $request->getUri()->getPath() . PHP_EOL;
+    $clientIp = $request->getServerParams()['REMOTE_ADDR'];
+
+    $logData = [
+        $clientIp,
+        $request->getMethod(),
+        $request->getUri()->getPath()
+    ];
+
+    echo date('Y-m-d H:i:s') . ' '
+        . implode(' ', $logData)
+        . PHP_EOL;
+
     return new Response(200, ['Content-Type' => 'text/plain'],  "Hello world\n");
 });
 
