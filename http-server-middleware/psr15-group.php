@@ -14,7 +14,7 @@ $server = new Server([
         ->withMiddleware(
             \Middlewares\Redirect::class,
             [
-                ['/old-url' => '/new-url']
+                ['/admin' => '/']
             ]),
     function(\Psr\Http\Message\RequestInterface $request){
         echo 'IP: ' . $request->getAttribute('client-ip');
