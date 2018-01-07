@@ -13,6 +13,7 @@
         "react/promise-stream": "^1.1",
         "middlewares/client-ip": "^0.7.0",
         "for/http-middleware-psr15-adapter": "dev-master",
-        "middlewares/response-time": "^0.5.0"
+        "middlewares/response-time": "^0.5.0",
+        "middlewares/redirect": "^0.3.0"
     }
 }
