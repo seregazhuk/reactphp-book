@@ -44,6 +44,7 @@ $loggingMiddleware = function(ServerRequestInterface $request, callable $next) {
 };
 
 $server = new Server([
+    $clientIpMiddleware,
     $loggingMiddleware,
     $redirectMiddleware,
     function (ServerRequestInterface $request) {
