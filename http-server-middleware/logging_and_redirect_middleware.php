@@ -17,13 +17,28 @@ $redirectMiddleware = function(ServerRequestInterface $request, callable $next) 
 };
 
 $clientIpMiddleware = function(ServerRequestInterface $request, callable $next) {
-    $clientIp = $request->getServerParams()['REMOTE_ADDR'];
+    $serverParams = $request->getServerParams();
 
-    return $next($request);
+    if (!empty($serverParams['HTTP_CLIENT_IP'])) {
+        $clientIp = $serverParams['HTTP_CLIENT_IP'];
+    } elseif (!empty($serverParams['HTTP_X_FORWARDED_FOR'])) {
+        $clientIp = $serverParams['HTTP_X_FORWARDED_FOR'];
+    } else {
+        $clientIp = $serverParams['REMOTE_ADDR'];
+    }
+
+
+    return $next($request->withAttribute('client-ip', $clientIp));
 };
 
 $loggingMiddleware = function(ServerRequestInterface $request, callable $next) {
-    echo date('Y-m-d H:i:s') . ' ' . $request->getMethod() . ' ' . $request->getUri()->getPath() . PHP_EOL;
+    $logData = [
+        date('Y-m-d H:i:s'),
+        $request->getAttribute('client-ip'),
+        $request->getMethod(),
+        $request->getUri()->getPath()
+    ];
+    echo implode(' ', $logData) . PHP_EOL;
 
     return $next($request);
 };

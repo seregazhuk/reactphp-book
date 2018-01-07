@@ -20,14 +20,13 @@ $server = new Server(function (ServerRequestInterface $request) {
     }
 
     $logData = [
+        date('Y-m-d H:i:s'),
         $clientIp,
         $request->getMethod(),
         $request->getUri()->getPath()
     ];
 
-    echo date('Y-m-d H:i:s') . ' '
-        . implode(' ', $logData)
-        . PHP_EOL;
+    echo implode(' ', $logData) . PHP_EOL;
 
     return new Response(200, ['Content-Type' => 'text/plain'],  "Hello world\n");
 });
