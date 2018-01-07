@@ -9,7 +9,11 @@ use Psr\Http\Message\ServerRequestInterface;
 $loop = Factory::create();
 
 $server = new Server(function (ServerRequestInterface $request) {
-    echo date('Y-m-d H:i:s') . ' ' . $request->getMethod() . ' ' . $request->getUri() . PHP_EOL;
+    if($request->getUri()->getPath() === '/admin') {
+        return new Response(301, ['Location' => '/']);
+    }
+
+    echo date('Y-m-d H:i:s') . ' ' . $request->getMethod() . ' ' . $request->getUri()->getPath() . PHP_EOL;
     return new Response(200, ['Content-Type' => 'text/plain'],  "Hello world\n");
 });
 

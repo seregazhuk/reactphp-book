@@ -8,12 +8,21 @@ use Psr\Http\Message\ServerRequestInterface;
 
 $loop = Factory::create();
 
+$redirectMiddleware = function(ServerRequestInterface $request, callable $next) {
+    if($request->getUri()->getPath() === '/admin') {
+        return new Response(301, ['Location' => '/']);
+    }
+    return $next($request);
+};
+
 $loggingMiddleware = function(ServerRequestInterface $request, callable $next) {
-    echo date('Y-m-d H:i:s') . ' ' . $request->getMethod() . ' ' . $request->getUri() . PHP_EOL;
+    echo date('Y-m-d H:i:s') . ' ' . $request->getMethod() . ' ' . $request->getUri()->getPath() . PHP_EOL;
+
     return $next($request);
 };
 
 $server = new Server([
+    $redirectMiddleware,
     $loggingMiddleware,
     function (ServerRequestInterface $request) {
         return new Response(200, ['Content-Type' => 'text/plain'],  "Hello world\n");
