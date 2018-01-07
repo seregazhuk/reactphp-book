@@ -13,7 +13,15 @@ $server = new Server(function (ServerRequestInterface $request) {
         return new Response(301, ['Location' => '/']);
     }
 
-    $clientIp = $request->getServerParams()['REMOTE_ADDR'];
+    $serverParams = $request->getServerParams();
+
+    if (!empty($serverParams['HTTP_CLIENT_IP'])) {
+        $clientIp = $serverParams['HTTP_CLIENT_IP'];
+    } elseif (!empty($serverParams['HTTP_X_FORWARDED_FOR'])) {
+        $clientIp = $serverParams['HTTP_X_FORWARDED_FOR'];
+    } else {
+        $clientIp = $serverParams['REMOTE_ADDR'];
+    }
 
     $logData = [
         $clientIp,

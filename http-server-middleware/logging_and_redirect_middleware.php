@@ -16,6 +16,12 @@ $redirectMiddleware = function(ServerRequestInterface $request, callable $next) 
     return $next($request);
 };
 
+$clientIpMiddleware = function(ServerRequestInterface $request, callable $next) {
+    $clientIp = $request->getServerParams()['REMOTE_ADDR'];
+
+    return $next($request);
+};
+
 $loggingMiddleware = function(ServerRequestInterface $request, callable $next) {
     echo date('Y-m-d H:i:s') . ' ' . $request->getMethod() . ' ' . $request->getUri()->getPath() . PHP_EOL;
 
