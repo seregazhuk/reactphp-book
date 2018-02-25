@@ -1,6 +1,6 @@
 <?php
 
-require '../vendor/autoload.php';
+require './vendor/autoload.php';
 
 use Clue\React\Buzz\Browser;
 use React\EventLoop\LoopInterface;
@@ -8,6 +8,8 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class Parser
 {
+    const DEFAULT_TIMEOUT = 5;
+
     /**
      * @var Browser
      */
@@ -17,6 +19,11 @@ class Parser
      * @var array
      */
     private $parsed = [];
+
+    /**
+     * @var array
+     */
+    private $errors = [];
 
     /**
      * @var LoopInterface
@@ -29,15 +36,17 @@ class Parser
         $this->loop = $loop;
     }
 
-    public function parse(array $urls = [], $timeout = 5)
+    public function parse(array $urls = [], $timeout = self::DEFAULT_TIMEOUT)
     {
         foreach ($urls as $url) {
             $promise = $this->client->get($url)->then(
                 function (\Psr\Http\Message\ResponseInterface $response) {
                     $this->parsed[] = $this->extractFromHtml((string) $response->getBody());
+                }, function(Exception $e) use ($url) {
+                    $this->errors[$url] = $e->getMessage();
                 });
 
-            $this->loop->addTimer($timeout, function() use ($promise) {
+            $this->loop->addTimer($timeout, function() use ($promise, $url) {
                 $promise->cancel();
             });
         }
@@ -69,9 +78,14 @@ class Parser
         ];
     }
 
-    public function getMovieData()
+    public function movieData()
     {
         return $this->parsed;
+    }
+
+    public function errors()
+    {
+        return $this->errors;
     }
 }
 
@@ -83,7 +97,8 @@ $parser = new Parser($client, $loop);
 $parser->parse([
     'http://www.imdb.com/title/tt1270797/',
     'http://www.imdb.com/title/tt2527336/'
-], 2);
+], 3);
 
 $loop->run();
-print_r($parser->getMovieData());
+print_r($parser->movieData());
+print_r($parser->errors());
