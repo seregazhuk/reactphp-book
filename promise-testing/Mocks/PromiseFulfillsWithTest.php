@@ -7,22 +7,22 @@ use PHPUnit_Framework_MockObject_MockObject;
 use React\Promise\Deferred;
 use React\Promise\PromiseInterface;
 
-class PromiseResolvesWithTest extends TestCase
+class PromiseFulfillsWithTest extends TestCase
 {
     /** @test */
-    public function a_promise_resolves()
+    public function a_promise_fulfills()
     {
         $deferred = new Deferred();
         $deferred->resolve('foo');
 
-        $this->assertPromiseResolvesWith($deferred->promise(), 'bar');
+        $this->assertPromiseFulfillsWith($deferred->promise(), 'bar');
     }
 
     /**
      * @param PromiseInterface $promise
      * @param mixed $value
      */
-    public function assertPromiseResolvesWith(PromiseInterface $promise, $value)
+    public function assertPromiseFulfillsWith(PromiseInterface $promise, $value)
     {
         $promise->then($this->assertCallableCalledOnceWith($value));
     }

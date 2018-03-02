@@ -63,7 +63,7 @@ class PromiseRejectsWithTest extends TestCase
         } catch (Exception $exception) {
             return $exception;
         }
-        $this->fail('Failed asserting that promise rejects. Promise was resolved.');
+        $this->fail('Failed asserting that promise rejects. Promise was fulfilled.');
     }
 }
 

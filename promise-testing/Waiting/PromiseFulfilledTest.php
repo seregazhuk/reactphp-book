@@ -11,7 +11,7 @@ use Clue\React\Block;
 use React\Promise\PromiseInterface;
 use React\Promise\Timer\TimeoutException;
 
-class PromiseResolvesWithTest extends TestCase
+class PromiseFulfilledTest extends TestCase
 {
     const DEFAULT_TIMEOUT = 2;
     /**
@@ -26,32 +26,31 @@ class PromiseResolvesWithTest extends TestCase
     }
 
     /** @test */
-    public function a_promise_resolves_with_a_value()
+    public function a_promise_fulfills()
     {
         $deferred = new Deferred();
-        $deferred->resolve('foo');
+        $deferred->resolve();
 
-        $this->assertPromiseResolvesWith($deferred->promise(), 'bar');
+        $this->assertPromiseFulfills($deferred->promise());
     }
+
 
     /**
      * @param PromiseInterface $promise
-     * @param mixed $expectedValue
      * @param int|null $timeout seconds to wait for resolving
      * @return mixed
      */
-    public function assertPromiseResolvesWith(PromiseInterface $promise, $expectedValue, $timeout = null)
+    public function assertPromiseFulfills(PromiseInterface $promise, $timeout = null)
     {
-        $failMessage = 'Failed asserting that promise resolves with a specified value. ';
+        $failMessage = 'Failed asserting that promise fulfills. ';
         try {
-            $resolvedValue = Block\await($promise, $this->loop, $timeout ? : self::DEFAULT_TIMEOUT);
+            $this->addToAssertionCount(1);
+            Block\await($promise, $this->loop, $timeout ? : self::DEFAULT_TIMEOUT);
         } catch (TimeoutException $exception) {
             $this->fail($failMessage . 'Promise was rejected by timeout.');
         } catch (Exception $exception) {
             $this->fail($failMessage . 'Promise was rejected.');
         }
-
-        $this->assertEquals($expectedValue, $resolvedValue, $failMessage);
     }
 }
 
