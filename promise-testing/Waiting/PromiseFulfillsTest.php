@@ -11,7 +11,7 @@ use Clue\React\Block;
 use React\Promise\PromiseInterface;
 use React\Promise\Timer\TimeoutException;
 
-class PromiseFulfilledTest extends TestCase
+class PromiseFulfillsTest extends TestCase
 {
     const DEFAULT_TIMEOUT = 2;
     /**
