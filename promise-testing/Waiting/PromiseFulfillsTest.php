@@ -29,7 +29,7 @@ class PromiseFulfillsTest extends TestCase
     public function a_promise_fulfills()
     {
         $deferred = new Deferred();
-        $deferred->resolve();
+        $deferred->reject();
 
         $this->assertPromiseFulfills($deferred->promise());
     }
@@ -44,13 +44,13 @@ class PromiseFulfillsTest extends TestCase
     {
         $failMessage = 'Failed asserting that promise fulfills. ';
         try {
-            $this->addToAssertionCount(1);
             Block\await($promise, $this->loop, $timeout ? : self::DEFAULT_TIMEOUT);
         } catch (TimeoutException $exception) {
             $this->fail($failMessage . 'Promise was rejected by timeout.');
         } catch (Exception $exception) {
             $this->fail($failMessage . 'Promise was rejected.');
         }
+        $this->addToAssertionCount(1);
     }
 }
 
