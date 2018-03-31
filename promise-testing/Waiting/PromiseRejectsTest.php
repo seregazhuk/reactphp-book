@@ -9,7 +9,6 @@ use React\EventLoop\LoopInterface;
 use React\Promise\Deferred;
 use Clue\React\Block;
 use React\Promise\PromiseInterface;
-use React\Promise\Timer\TimeoutException;
 
 class PromiseRejectsTest extends TestCase
 {

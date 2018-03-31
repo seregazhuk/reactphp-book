@@ -6,7 +6,6 @@ use React\Http\Server;
 use React\Http\Response;
 use React\EventLoop\Factory;
 use Psr\Http\Message\ServerRequestInterface;
-use React\Promise\Promise;
 
 $loop = Factory::create();
 
