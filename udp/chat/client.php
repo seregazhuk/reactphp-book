@@ -82,7 +82,7 @@ class UdpChatClient
             return;
         }
 
-        if ($data == ':exit') {
+        if ($data === ':exit') {
             $this->sendData('', 'leave');
             $this->socket->end();
             return;

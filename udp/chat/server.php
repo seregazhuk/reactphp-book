@@ -42,12 +42,12 @@ class UdpChatServer
     {
         $data = json_decode($data, true);
 
-        if ($data['type'] == 'enter') {
+        if ($data['type'] === 'enter') {
             $this->addClient($data['name'], $address);
             return;
         }
 
-        if ($data['type'] == 'leave') {
+        if ($data['type'] === 'leave') {
             $this->removeClient($address);
             return;
         }
