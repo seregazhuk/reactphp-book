@@ -2,7 +2,9 @@
 
 require '../vendor/autoload.php';
 
-use React\EventLoop\Timer\TimerInterface; $loop = React\EventLoop\Factory::create();
+use React\EventLoop\TimerInterface;
+
+$loop = React\EventLoop\Factory::create();
 $counter = 0;
 $loop->addPeriodicTimer(2,
 	function(TimerInterface $timer) use (&$counter, $loop) {
