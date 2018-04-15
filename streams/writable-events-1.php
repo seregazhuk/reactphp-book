@@ -3,7 +3,7 @@
 require '../vendor/autoload.php';
 
 $loop = \React\EventLoop\Factory::create();
-$writable = new \React\Stream\WritableResourceStream(fopen('php://stdout', 'w'), $loop, 1);
+$writable = new \React\Stream\WritableResourceStream(STDOUT, $loop, 1);
 
 var_dump($writable->write("Hello world\n"));
 
