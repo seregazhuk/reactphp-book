@@ -7,7 +7,7 @@ $writable = new \React\Stream\WritableResourceStream(STDOUT, $loop, 1);
 
 var_dump($writable->write("Hello world\n"));
 
-$writable->on('drain', function(){
+$writable->on('drain', function() {
     echo "The stream is drained\n";
 });
 
