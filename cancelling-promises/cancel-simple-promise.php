@@ -7,7 +7,7 @@ use function \React\Promise\Timer\timeout;
 $loop = React\EventLoop\Factory::create();
 
 $resolve = function(callable $resolve, callable $reject) use ($loop, &$timer) {
-    $timer = $loop->addTimer(5, function() use ($resolve) {
+    $timer = $loop->addTimer(5, function() {
         echo "resolved\n";
     });
 };

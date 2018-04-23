@@ -21,8 +21,6 @@ $cancel = function(callable $resolve, callable $reject) use (&$timer) {
 
 $promise = new React\Promise\Promise($resolve, $cancel);
 
-$promise = new React\Promise\Promise($resolve, $cancel);
-
 timeout($promise, 2, $loop)
     ->then(function() {
         // the principal promise resolved in 2 seconds
