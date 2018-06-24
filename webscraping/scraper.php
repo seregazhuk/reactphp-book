@@ -38,6 +38,9 @@ class Scraper
 
     public function scrape(array $urls = [], $timeout = self::DEFAULT_TIMEOUT)
     {
+        $this->errors = [];
+        $this->scraped = [];
+
         foreach ($urls as $url) {
             $promise = $this->client->get($url)->then(
                 function (\Psr\Http\Message\ResponseInterface $response) {
@@ -46,7 +49,7 @@ class Scraper
                     $this->errors[$url] = $e->getMessage();
                 });
 
-            $this->loop->addTimer($timeout, function() use ($promise, $url) {
+            $this->loop->addTimer($timeout, function() use ($promise) {
                 $promise->cancel();
             });
         }
