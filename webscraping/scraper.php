@@ -6,7 +6,7 @@ use Clue\React\Buzz\Browser;
 use React\EventLoop\LoopInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
-class Parser
+class Scraper
 {
     const DEFAULT_TIMEOUT = 5;
 
@@ -18,7 +18,7 @@ class Parser
     /**
      * @var array
      */
-    private $parsed = [];
+    private $scraped = [];
 
     /**
      * @var array
@@ -36,12 +36,12 @@ class Parser
         $this->loop = $loop;
     }
 
-    public function parse(array $urls = [], $timeout = self::DEFAULT_TIMEOUT)
+    public function scrape(array $urls = [], $timeout = self::DEFAULT_TIMEOUT)
     {
         foreach ($urls as $url) {
             $promise = $this->client->get($url)->then(
                 function (\Psr\Http\Message\ResponseInterface $response) {
-                    $this->parsed[] = $this->extractFromHtml((string) $response->getBody());
+                    $this->scraped[] = $this->extractFromHtml((string) $response->getBody());
                 }, function(Exception $e) use ($url) {
                     $this->errors[$url] = $e->getMessage();
                 });
@@ -80,7 +80,7 @@ class Parser
 
     public function movieData()
     {
-        return $this->parsed;
+        return $this->scraped;
     }
 
     public function errors()
@@ -93,12 +93,12 @@ class Parser
 $loop = React\EventLoop\Factory::create();
 $client = new Browser($loop);
 
-$parser = new Parser($client, $loop);
-$parser->parse([
+$scraper = new Scraper($client, $loop);
+$scraper->scrape([
     'http://www.imdb.com/title/tt1270797/',
     'http://www.imdb.com/title/tt2527336/'
 ], 3);
 
 $loop->run();
-print_r($parser->movieData());
-print_r($parser->errors());
+print_r($scraper->movieData());
+print_r($scraper->errors());
