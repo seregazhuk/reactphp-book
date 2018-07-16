@@ -6,7 +6,7 @@ use React\Socket\ConnectionInterface;
 class ConnectionsPool {
 
 	/** @var SplObjectStorage  */
-	protected $connections;
+	private $connections;
 
 	public function __construct()
 	{
@@ -23,7 +23,7 @@ class ConnectionsPool {
 	/**
 	 * @param ConnectionInterface $connection
 	 */
-	protected function initEvents(ConnectionInterface $connection)
+	private function initEvents(ConnectionInterface $connection)
 	{
 		// On receiving the data we loop through other connections
 		// from the pool and write this data to them
@@ -47,7 +47,7 @@ class ConnectionsPool {
 		});
 	}
 
-	protected function sendMessage(ConnectionInterface $connection, $name, $message)
+	private function sendMessage(ConnectionInterface $connection, $name, $message)
 	{
 		// if is a private message
 		preg_match('/^@(\w+):\s*(.+)/', $message, $matches);
@@ -63,7 +63,7 @@ class ConnectionsPool {
 		}
 	}
 
-	protected function sendTo($name, $message)
+	private function sendTo($name, $message)
 	{
 		$connection = $this->getConnectionByName($name);
 		if(!$connection) return false;
@@ -72,7 +72,7 @@ class ConnectionsPool {
 		return true;
 	}
 
-	protected function checkIsUniqueName($name)
+	private function checkIsUniqueName($name)
 	{
 		foreach ($this->connections as $obj) {
 			$data = $this->connections->offsetGet($obj);
@@ -83,7 +83,7 @@ class ConnectionsPool {
 		return true;
 	}
 
-	protected function addNewMember($name, ConnectionInterface $connection)
+	private function addNewMember($name, ConnectionInterface $connection)
 	{
 		$name = str_replace(["\n", "\r"], "", $name);
 
@@ -97,12 +97,12 @@ class ConnectionsPool {
 		$this->sendAll(Output::info("User $name joins the chat") . "\n", $connection);
 	}
 
-	protected function setConnectionData(ConnectionInterface $connection, $data)
+	private function setConnectionData(ConnectionInterface $connection, $data)
 	{
 		$this->connections->offsetSet($connection, $data);
 	}
 
-	protected function getConnectionData(ConnectionInterface $connection)
+	private function getConnectionData(ConnectionInterface $connection)
 	{
 		return $this->connections->offsetGet($connection);
 	}
@@ -114,7 +114,7 @@ class ConnectionsPool {
 	 * @param mixed $data
 	 * @param ConnectionInterface $except
 	 */
-	protected function sendAll($data, ConnectionInterface $except) {
+	private function sendAll($data, ConnectionInterface $except) {
 		foreach ($this->connections as $conn) {
 			if ($conn != $except) $conn->write($data);
 		}
@@ -124,7 +124,7 @@ class ConnectionsPool {
 	 * @param string $name
 	 * @return null|ConnectionInterface
 	 */
-	protected function getConnectionByName($name)
+	private function getConnectionByName($name)
 	{
 		/** @var ConnectionInterface $connection */
 		foreach ($this->connections as $connection) {
