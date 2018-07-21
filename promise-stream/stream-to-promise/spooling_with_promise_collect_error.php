@@ -6,7 +6,8 @@ use React\Stream\ReadableResourceStream;
 
 require '../../vendor/autoload.php';
 
-class Logger {
+class Logger 
+{
     /**
      * @param PromiseInterface $promise
      * @return PromiseInterface
@@ -19,11 +20,12 @@ class Logger {
     }
 }
 
-class Provider {
+class Provider 
+{
     /**
      * @var ReadableResourceStream
      */
-    protected $stream;
+    private $stream;
 
     /**
      * @param string $path

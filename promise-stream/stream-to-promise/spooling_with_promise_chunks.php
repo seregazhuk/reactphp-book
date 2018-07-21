@@ -6,7 +6,8 @@ use React\Stream\ReadableResourceStream;
 
 require '../../vendor/autoload.php';
 
-class Processor {
+class Processor
+{
     /**
      * @param PromiseInterface $promise
      * @return PromiseInterface
@@ -22,7 +23,8 @@ class Processor {
     }
 }
 
-class Provider {
+class Provider
+{
     /**
      * @param string $path
      * @param LoopInterface $loop

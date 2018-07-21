@@ -5,7 +5,8 @@ use React\Stream\ReadableResourceStream;
 
 require '../../vendor/autoload.php';
 
-class Processor {
+class Processor
+{
     public function process($data)
     {
         echo $data . PHP_EOL;
@@ -13,10 +14,11 @@ class Processor {
     }
 }
 
-class Provider {
+class Provider
+{
     public function get($path, LoopInterface $loop)
     {
-        $spool = "";
+        $spool = '';
 
         $stream = new ReadableResourceStream(
             fopen($path, 'r'), $loop
