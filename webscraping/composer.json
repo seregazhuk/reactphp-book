@@ -1,7 +1,0 @@
-{
-    "require": {
-        "clue/buzz-react": "^2.3",
-        "symfony/dom-crawler": "^3.4",
-        "symfony/css-selector": "^3.4"
-    }
-}
