@@ -31,7 +31,7 @@ class ConnectionsPool {
 
 			// It is the first data received, so we consider it as
 			// a users name.
-			if(empty($connectionData)) {
+			if(empty($connectionData['name'])) {
 				$this->addNewMember($data, $connection);
 				return;
 			}
