@@ -1,69 +1,71 @@
 <?php
 
-require '../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
+use React\Filesystem\Filesystem;
+use React\Filesystem\FilesystemInterface;
+use React\Filesystem\Stream\ReadableStream;
 use React\Http\Server;
 use React\Http\Response;
 use React\EventLoop\Factory;
-use React\EventLoop\LoopInterface;
-use React\Stream\ReadableResourceStream;
+use React\Promise\PromiseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class VideoStreaming
+final class VideoStreaming
 {
+    private $filesystem;
 
-    /**
-     * @var LoopInterface
-     */
-    protected $eventLoop;
-
-    /**
-     * @param LoopInterface $eventLoop
-     */
-    public function __construct(LoopInterface $eventLoop)
+    public function __construct(FilesystemInterface $filesystem)
     {
-        $this->eventLoop = $eventLoop;
+        $this->filesystem = $filesystem;
     }
 
     /**
      * @param ServerRequestInterface $request
-     * @return Response
+     * @return Response|PromiseInterface
      */
-    public function __invoke(ServerRequestInterface $request)
+    function __invoke(ServerRequestInterface $request)
     {
-        $file = $this->getFilePath($request);
-        if (empty($file)) {
+        $filePath = $this->getFilePath($request);
+
+        if ($filePath === null) {
             return new Response(200, ['Content-Type' => 'text/plain'], 'Video streaming server');
         }
 
-        return $this->makeResponseFromFile($file);
+        return $this->makeResponseFromFile($filePath);
     }
 
     /**
      * @param string $filePath
-     * @return Response
+     * @return PromiseInterface
      */
-    protected function makeResponseFromFile($filePath)
+    private function makeResponseFromFile($filePath)
     {
-        $fileStream = fopen($filePath, 'r');
-        if (!$fileStream) {
-            return new Response(404, ['Content-Type' => 'text/plain'], "Specified video doesn't exist on server.");
-        }
+        $file = $this->filesystem->file($filePath);
 
-        $stream = new ReadableResourceStream($fileStream, $this->eventLoop);
-
-        return new Response(200, ['Content-Type' => mime_content_type($filePath)], $stream);
+        return $file->exists()->then(
+            function () use ($file) {
+                return $file->open('r')->then(
+                    function (ReadableStream $stream) {
+                        return new Response(200, ['Content-Type' => 'video/mp4'], $stream);
+                    }
+                );
+            }, function () {
+            return new Response(404, ['Content-Type' => 'text/plain'], "This video doesn't exist on server.");
+        });
     }
 
     /**
      * @param ServerRequestInterface $request
-     * @return string
+     * @return string|null
      */
-    protected function getFilePath(ServerRequestInterface $request)
+    private function getFilePath(ServerRequestInterface $request)
     {
-        $file = $request->getQueryParams()['file'] ?? '';
+        $file = $request->getQueryParams()['video'] ?? null;
 
-        if (empty($file)) return '';
+        if ($file === null) {
+            return null;
+        }
 
         return __DIR__ . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . basename($file);
     }
@@ -71,7 +73,7 @@ class VideoStreaming
 
 $loop = Factory::create();
 
-$videoStreaming = new VideoStreaming($loop);
+$videoStreaming = new VideoStreaming(Filesystem::create($loop));
 $server = new Server($videoStreaming);
 
 $socket = new \React\Socket\Server('127.0.0.1:8000', $loop);

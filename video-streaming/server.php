@@ -1,31 +1,35 @@
 <?php
 
-
-require 'vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 use React\Http\Server;
 use React\Http\Response;
 use React\EventLoop\Factory;
 use Psr\Http\Message\ServerRequestInterface;
+use React\Stream\ReadableStreamInterface;
 
 $loop = Factory::create();
+$filesystem = \React\Filesystem\Filesystem::create($loop);
 
-$server = new Server(function (ServerRequestInterface $request) use ($loop) {
-    $params = $request->getQueryParams();
-    $file = $params['video'] ?? '';
+$server = new Server(
+    function (ServerRequestInterface $request) use ($filesystem) {
+        $params = $request->getQueryParams();
+        $fileName = $params['video'] ?? null;
 
-    if (empty($file)) {
-        return new Response(200, ['Content-Type' => 'text/plain'], 'Streaming server');
+        if ($fileName === null) {
+            return new Response(200, ['Content-Type' => 'text/plain'], 'Video streaming server');
+        }
+
+        $filePath = __DIR__ . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $fileName;
+        $file = $filesystem->file($filePath);
+
+        return $file->open('r')->then(
+            function (ReadableStreamInterface $stream) {
+                return new Response(200, ['Content-Type' => 'video/mp4'], $stream);
+            }
+        );
     }
-
-    $filePath = __DIR__ . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . $file;
-    $filesystem = \React\Filesystem\Filesystem::create($loop);
-    $filesystem->file('test.txt')->open('r')->then(function(\React\Stream\ReadableStream $stream){
-
-    });
-
-    return new Response(200, ['Content-Type' => mime_content_type($filePath)], $streamSomeHow);
-});
+);
 
 $socket = new \React\Socket\Server('127.0.0.1:8000', $loop);
 $server->listen($socket);
@@ -33,3 +37,4 @@ $server->listen($socket);
 echo 'Listening on ' . str_replace('tcp:', 'http:', $socket->getAddress()) . "\n";
 
 $loop->run();
+
