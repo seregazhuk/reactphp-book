@@ -2,39 +2,23 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use React\EventLoop\LoopInterface;
+use React\Filesystem\FilesystemInterface;
 use React\HttpClient\Client;
 
 class Downloader
 {
-    /**
-     * @var React\EventLoop\LoopInterface;
-     */
-    private $loop;
+    private $client;
 
-    /**
-     * @var \React\HttpClient\Client
-     */
-    protected $client;
+    private $filesystem;
 
-    /**
-     * @var array
-     */
     private $requests = [];
 
-    /**
-     * @param Client $client
-     * @param LoopInterface $loop
-     */
-    public function __construct(Client $client, LoopInterface $loop)
+    public function __construct(Client $client, FilesystemInterface $filesystem)
     {
         $this->client = $client;
-        $this->loop = $loop;
+        $this->filesystem = $filesystem;
     }
 
-    /**
-     * @param array $files
-     */
     public function download(array $files)
     {
         foreach ($files as $index => $file) {
@@ -53,7 +37,7 @@ class Downloader
     public function initRequest($url, $position)
     {
         $fileName = basename($url);
-        $file = new \React\Stream\WritableResourceStream(fopen($fileName, 'w'), $this->loop);
+        $file = \React\Promise\Stream\unwrapWritable($this->filesystem->file($fileName)->open('cw'));
 
         $request = $this->client->request('GET', $url);
         $request->on('response', function (\React\HttpClient\Response $response) use ($file, $fileName, $position) {
@@ -71,7 +55,7 @@ class Downloader
      * @param int $position
      * @return \React\Stream\ThroughStream
      */
-    protected function makeProgressStream($size, $fileName, $position)
+    private function makeProgressStream($size, $fileName, $position)
     {
         $currentSize = 0;
 
@@ -84,15 +68,13 @@ class Downloader
         return $progress;
     }
 
-    protected function runRequests()
+    private function runRequests()
     {
         foreach ($this->requests as $request) {
             $request->end();
         }
 
         $this->requests = [];
-
-        $this->loop->run();
     }
 }
 
@@ -100,9 +82,11 @@ $loop = React\EventLoop\Factory::create();
 $client = new React\HttpClient\Client($loop);
 
 $files = [
-    'http://www.sample-videos.com/video/mp4/720/big_buck_bunny_720p_1mb.mp4',
-    'http://www.sample-videos.com/video/mp4/720/big_buck_bunny_720p_2mb.mp4',
-    'http://www.sample-videos.com/video/mp4/720/big_buck_bunny_720p_5mb.mp4',
+    'https://www.sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
+    'https://www.sample-videos.com/video123/mp4/720/big_buck_bunny_720p_2mb.mp4',
+    'https://www.sample-videos.com/video123/mp4/720/big_buck_bunny_720p_5mb.mp4',
 ];
 
-(new Downloader($client, $loop))->download($files);
+$downloader = new Downloader($client, \React\Filesystem\Filesystem::create($loop));
+$downloader->download($files);
+$loop->run();
