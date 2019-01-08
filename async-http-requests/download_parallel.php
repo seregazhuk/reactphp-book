@@ -4,8 +4,11 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use React\Filesystem\FilesystemInterface;
 use React\HttpClient\Client;
+use React\HttpClient\Response;
+use function \React\Promise\Stream\unwrapWritable;
+use React\Stream\ThroughStream;
 
-class Downloader
+final class Downloader
 {
     private $client;
 
@@ -34,13 +37,13 @@ class Downloader
      * @param string $url
      * @param int $position
      */
-    public function initRequest($url, $position)
+    private function initRequest($url, $position)
     {
         $fileName = basename($url);
-        $file = \React\Promise\Stream\unwrapWritable($this->filesystem->file($fileName)->open('cw'));
+        $file = unwrapWritable($this->filesystem->file($fileName)->open('cw'));
 
         $request = $this->client->request('GET', $url);
-        $request->on('response', function (\React\HttpClient\Response $response) use ($file, $fileName, $position) {
+        $request->on('response', function (Response $response) use ($file, $fileName, $position) {
             $size = $response->getHeaders()['Content-Length'];
             $progress = $this->makeProgressStream($size, $fileName, $position);
             $response->pipe($progress)->pipe($file);
@@ -53,13 +56,13 @@ class Downloader
      * @param int $size
      * @param string $fileName
      * @param int $position
-     * @return \React\Stream\ThroughStream
+     * @return ThroughStream
      */
     private function makeProgressStream($size, $fileName, $position)
     {
         $currentSize = 0;
 
-        $progress = new \React\Stream\ThroughStream();
+        $progress = new ThroughStream();
         $progress->on('data', function($data) use ($size, &$currentSize, $fileName, $position){
             $currentSize += strlen($data);
             echo str_repeat("\033[1A", $position), "$fileName: ", number_format($currentSize / $size * 100), "%", str_repeat("\n", $position);
