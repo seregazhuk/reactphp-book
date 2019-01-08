@@ -22,16 +22,16 @@ $server = new Server(function (ServerRequestInterface $request) use ($filesystem
     $filePath = __DIR__ . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . basename($file);
 
     $file = $filesystem->file($filePath);
-    return $file->exists()->then(
-        function () use ($file) {
-            return $file->open('r')->then(
-                function (ReadableStream $stream) {
-                    return new Response(200, ['Content-Type' => 'video/mp4'], $stream);
-                }
-            );
-        }, function () {
-        return new Response(404, ['Content-Type' => 'text/plain'], "This video doesn't exist on server.");
-    });
+    return $file->exists()
+        ->then(function () use ($file) {
+            return $file->open('r');
+        })
+        ->then(function (ReadableStream $stream) {
+            return new Response(200, ['Content-Type' => 'video/mp4'], $stream);
+        })
+        ->otherwise(function () {
+            return new Response(404, ['Content-Type' => 'text/plain'], "This video doesn't exist on server.");
+        });
 });
 
 $socket = new \React\Socket\Server('127.0.0.1:8000', $loop);

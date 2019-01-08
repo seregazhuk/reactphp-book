@@ -43,16 +43,16 @@ final class VideoStreaming
     {
         $file = $this->filesystem->file($filePath);
 
-        return $file->exists()->then(
-            function () use ($file) {
-                return $file->open('r')->then(
-                    function (ReadableStream $stream) {
-                        return new Response(200, ['Content-Type' => 'video/mp4'], $stream);
-                    }
-                );
-            }, function () {
-            return new Response(404, ['Content-Type' => 'text/plain'], "This video doesn't exist on server.");
-        });
+        return $file->exists()
+            ->then(function () use ($file) {
+                return $file->open('r');
+            })
+            ->then(function (ReadableStream $stream) {
+                return new Response(200, ['Content-Type' => 'video/mp4'], $stream);
+            })
+            ->otherwise(function () {
+                return new Response(404, ['Content-Type' => 'text/plain'], "This video doesn't exist on server.");
+            });
     }
 
     /**
