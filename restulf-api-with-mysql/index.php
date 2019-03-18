@@ -12,7 +12,7 @@ $factory = new Factory($loop);
 $db = $factory->createLazyConnection('root:@localhost/reactphp-users');
 $users = new \App\Users($db);
 
-$dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $routes) use ($users) {
+$router = new \App\Router(function(FastRoute\RouteCollector $routes) use ($users) {
     $routes->addRoute('GET', '/users', new \App\Controller\ListUsers($users));
     $routes->addRoute('POST', '/users', new \App\Controller\CreateUser($users));
     $routes->addRoute('GET', '/users/{id}', new \App\Controller\ViewUser($users));
@@ -20,22 +20,9 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $rout
     $routes->addRoute('DELETE', '/users/{id}', new \App\Controller\DeleteUser($users));
 });
 
-$server = new Server(function (ServerRequestInterface $request) use ($dispatcher) {
-    $routeInfo = $dispatcher->dispatch(
-        $request->getMethod(), $request->getUri()->getPath()
-    );
-
-    switch ($routeInfo[0]) {
-        case FastRoute\Dispatcher::NOT_FOUND:
-            return new Response(404, ['Content-Type' => 'text/plain'],  'Not found');
-        case FastRoute\Dispatcher::FOUND:
-            $params = $routeInfo[2] ?? [];
-            return $routeInfo[1]($request, ... array_values($params));
-    }
-});
+$server = new Server($router);
 
 $socket = new \React\Socket\Server('127.0.0.1:8000', $loop);
-
 $server->listen($socket);
 
 $server->on('error', function (Exception $exception) {
