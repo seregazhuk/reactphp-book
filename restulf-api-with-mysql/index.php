@@ -19,7 +19,7 @@ $router = new \App\Router(function(FastRoute\RouteCollector $routes) use ($users
 });
 
 $server = new Server([
-    new \App\Guard($loop, ['root' => 'root']),
+    new \App\Auth($loop, ['user' => 'secret']),
     $router
 ]);
 

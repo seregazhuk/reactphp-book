@@ -6,7 +6,7 @@ use FriendsOfReact\Http\Middleware\Psr15Adapter\PSR15Middleware;
 use Psr\Http\Message\ServerRequestInterface;
 use React\EventLoop\LoopInterface;
 
-final class Guard
+final class Auth
 {
     private $basicAuth;
 
