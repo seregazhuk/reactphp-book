@@ -40,3 +40,9 @@ DELETE http://127.0.0.1:8000/users/1
 Content-Type: application/json
 
 ###
+
+# Get all users with auth
+GET http://127.0.0.1:8000/users
+Authorization: Basic cm9vdDpyb290
+
+###

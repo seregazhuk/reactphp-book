@@ -1,7 +1,5 @@
 <?php
 
-use Psr\Http\Message\ServerRequestInterface;
-use React\Http\Response;
 use React\Http\Server;
 use React\MySQL\Factory;
 
@@ -20,7 +18,10 @@ $router = new \App\Router(function(FastRoute\RouteCollector $routes) use ($users
     $routes->addRoute('DELETE', '/users/{id}', new \App\Controller\DeleteUser($users));
 });
 
-$server = new Server($router);
+$server = new Server([
+    new \App\Guard($loop, ['root' => 'root']),
+    $router
+]);
 
 $socket = new \React\Socket\Server('127.0.0.1:8000', $loop);
 $server->listen($socket);
