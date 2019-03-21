@@ -5,8 +5,8 @@ namespace App;
 use FastRoute\Dispatcher;
 use LogicException;
 use Psr\Http\Message\ServerRequestInterface;
-use function FastRoute\simpleDispatcher;
 use React\Http\Response;
+use function FastRoute\simpleDispatcher;
 
 final class Router
 {
@@ -17,7 +17,7 @@ final class Router
         $this->dispatcher = simpleDispatcher($routesDefinitionCallback);
     }
 
-    public function __invoke(ServerRequestInterface $request, callable $next = null)
+    public function __invoke(ServerRequestInterface $request)
     {
         $routeInfo = $this->dispatcher->dispatch(
             $request->getMethod(), $request->getUri()->getPath()
