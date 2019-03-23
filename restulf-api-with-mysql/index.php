@@ -13,9 +13,9 @@ $users = new \App\Users($db);
 $router = new \App\Router(function(FastRoute\RouteCollector $routes) use ($users) {
     $routes->addRoute('GET', '/users', new \App\Controller\ListUsers($users));
     $routes->addRoute('POST', '/users', new \App\Controller\CreateUser($users));
-    $routes->addRoute('GET', '/users/{id}', new \App\Controller\ViewUser($users));
-    $routes->addRoute('PUT', '/users/{id}', new \App\Controller\UpdateUser($users));
-    $routes->addRoute('DELETE', '/users/{id}', new \App\Controller\DeleteUser($users));
+    $routes->addRoute('GET', '/users/{id:\d+}', new \App\Controller\ViewUser($users));
+    $routes->addRoute('PUT', '/users/{id:\d+}', new \App\Controller\UpdateUser($users));
+    $routes->addRoute('DELETE', '/users/{id:\d+}', new \App\Controller\DeleteUser($users));
 });
 
 $server = new Server([
