@@ -3,18 +3,19 @@
 namespace App;
 
 use FastRoute\Dispatcher;
+use FastRoute\Dispatcher\GroupCountBased;
+use FastRoute\RouteCollector;
 use LogicException;
 use Psr\Http\Message\ServerRequestInterface;
 use React\Http\Response;
-use function FastRoute\simpleDispatcher;
 
 final class Router
 {
     private $dispatcher;
 
-    public function __construct(callable $routesDefinitionCallback)
+    public function __construct(RouteCollector $routes)
     {
-        $this->dispatcher = simpleDispatcher($routesDefinitionCallback);
+        $this->dispatcher = new GroupCountBased($routes->getData());
     }
 
     public function __invoke(ServerRequestInterface $request)

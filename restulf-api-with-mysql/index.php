@@ -1,5 +1,16 @@
 <?php
 
+use App\Auth;
+use App\Controller\CreateUser;
+use App\Controller\DeleteUser;
+use App\Controller\ListUsers;
+use App\Controller\UpdateUser;
+use App\Controller\ViewUser;
+use App\Router;
+use App\Users;
+use FastRoute\DataGenerator\GroupCountBased;
+use FastRoute\RouteCollector;
+use FastRoute\RouteParser\Std;
 use React\Http\Server;
 use React\MySQL\Factory;
 
@@ -8,19 +19,18 @@ require __DIR__ . '/vendor/autoload.php';
 $loop = \React\EventLoop\Factory::create();
 $factory = new Factory($loop);
 $db = $factory->createLazyConnection('root:@localhost/reactphp-users');
-$users = new \App\Users($db);
+$users = new Users($db);
 
-$router = new \App\Router(function(FastRoute\RouteCollector $routes) use ($users) {
-    $routes->addRoute('GET', '/users', new \App\Controller\ListUsers($users));
-    $routes->addRoute('POST', '/users', new \App\Controller\CreateUser($users));
-    $routes->addRoute('GET', '/users/{id:\d+}', new \App\Controller\ViewUser($users));
-    $routes->addRoute('PUT', '/users/{id:\d+}', new \App\Controller\UpdateUser($users));
-    $routes->addRoute('DELETE', '/users/{id:\d+}', new \App\Controller\DeleteUser($users));
-});
+$routes = new RouteCollector(new Std(), new GroupCountBased());
+$routes->get('/users', new ListUsers($users));
+$routes->post('/users', new CreateUser($users));
+$routes->get('/users/{id}', new ViewUser($users));
+$routes->put('/users/{id}', new UpdateUser($users));
+$routes->delete('/users/{id}', new DeleteUser($users));
 
 $server = new Server([
-    new \App\Auth($loop, ['user' => 'secret']),
-    $router
+    new Auth($loop, ['user' => 'secret']),
+    new Router($routes),
 ]);
 
 $socket = new \React\Socket\Server('127.0.0.1:8000', $loop);
