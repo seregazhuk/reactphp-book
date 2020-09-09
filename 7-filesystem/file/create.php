@@ -10,9 +10,7 @@ $filesystem = Filesystem::create($loop);
 
 $file = $filesystem->file('new_created.txt');
 $file->create()->then(
-    function () {
-        echo 'File created' . PHP_EOL;
-    }
+    fn() => print 'File created' . PHP_EOL
 );
 
 $loop->run();

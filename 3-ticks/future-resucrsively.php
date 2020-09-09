@@ -12,10 +12,7 @@ $callback = function (LoopInterface $eventLoop) use (&$callback) {
 };
 
 $eventLoop->futureTick($callback);
-$eventLoop->futureTick(
-    function (LoopInterface $eventLoop) {
-        $eventLoop->stop();
-    }
-);
+$eventLoop->futureTick(fn(LoopInterface $eventLoop) => $eventLoop->stop());
+
 $eventLoop->run();
 echo "Finished\n";

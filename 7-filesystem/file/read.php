@@ -10,15 +10,8 @@ $filesystem = Filesystem::create($loop);
 
 $file = $filesystem->file('test.txt');
 $file->getContents()->then(
-    function ($contents) {
-        echo 'Reading completed' . PHP_EOL;
-    }
+    fn ($contents) => print 'Reading completed' . PHP_EOL
 );
-$loop->addPeriodicTimer(
-    1,
-    function () {
-        echo 'Timer' . PHP_EOL;
-    }
-);
+$loop->addPeriodicTimer(1, fn() => print 'Timer' . PHP_EOL);
 
 $loop->run();

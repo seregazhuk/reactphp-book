@@ -9,7 +9,7 @@ use React\Promise\PromiseInterface;
 class PromiseFulfillsTest extends TestCase
 {
     /** @test */
-    public function a_promise_fulfills()
+    public function a_promise_fulfills(): void
     {
         $deferred = new Deferred();
         $deferred->resolve();

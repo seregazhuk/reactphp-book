@@ -9,10 +9,10 @@ $loop = Factory::create();
 $filesystem = Filesystem::create($loop);
 
 $file = $filesystem->file('test.txt');
-$file->putContents("Hello world\n")->then(
-    function () {
-        echo "Data was written" . PHP_EOL;
-    }
-);
+$file
+    ->putContents("Hello world\n")
+    ->then(
+        fn() => print "Data was written" . PHP_EOL
+    );
 
 $loop->run();

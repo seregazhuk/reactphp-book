@@ -1,0 +1,13 @@
+{
+    "name": "event-driven-php/socket-chat",
+    "minimum-stability": "stable",
+    "require": {
+        "react/socket": "^1.5",
+        "clue/stdio-react": "^2.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Chat\\": "src/"
+        }
+    }
+}

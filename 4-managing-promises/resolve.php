@@ -9,8 +9,4 @@ var_dump($deferred->promise() === $promise);
 $deferred->resolve('hello world');
 
 $promise = React\Promise\resolve($value = 'my-value');
-$promise->then(
-    function ($value) {
-        echo $value . PHP_EOL;
-    }
-);
+$promise->then(fn($value) => print $value . PHP_EOL);

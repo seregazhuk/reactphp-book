@@ -11,9 +11,7 @@ $pending = [
 ];
 
 $promise = \React\Promise\all($pending)->then(
-    function ($resolved) {
-        print_r($resolved);
-    }
+    fn ($resolved) => print_r($resolved)
 );
 
 $firstResolver->resolve(10);

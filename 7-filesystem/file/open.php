@@ -14,9 +14,7 @@ $file->open('r')
         function ($stream) {
             $stream->on(
                 'data',
-                function ($chunk) {
-                    echo 'Chunk read' . PHP_EOL;
-                }
+                fn($chunk) => print 'Chunk read' . $chunk . PHP_EOL
             );
         }
     );

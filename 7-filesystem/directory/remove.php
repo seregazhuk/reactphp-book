@@ -10,12 +10,8 @@ $filesystem = Filesystem::create($loop);
 $dir = $filesystem->dir('temp');
 
 $dir->removeRecursive()->then(
-    function () {
-        echo 'Removed' . PHP_EOL;
-    },
-    function (Exception $e) {
-        echo 'Error: ' . $e->getMessage() . PHP_EOL;
-    }
+    fn() => print "Removed\n",
+    fn(Exception $e) => print "Error: {$e->getMessage()}\n"
 );
 
 $loop->run();

@@ -11,23 +11,11 @@ $pending = [
 ];
 
 $promise = \React\Promise\any($pending)->then(
-    function ($resolved) {
-        echo $resolved . PHP_EOL;
-    }
+    fn($resolved) => print $resolved . PHP_EOL
 );
 
 $loop = \React\EventLoop\Factory::create();
-$loop->addTimer(
-    2,
-    function () use ($firstResolver) {
-        $firstResolver->resolve(10);
-    }
-);
-$loop->addTimer(
-    1,
-    function () use ($secondResolver) {
-        $secondResolver->resolve(20);
-    }
-);
+$loop->addTimer(2, fn() => $firstResolver->resolve(10));
+$loop->addTimer(1, fn() => $secondResolver->resolve(20));
 
 $loop->run();

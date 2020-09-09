@@ -9,9 +9,7 @@ $output = new \React\Stream\WritableResourceStream(STDOUT, $loop);
 
 $readable->on(
     'data',
-    function ($data) use ($output) {
-        $output->write($data);
-    }
+    fn ($data) => $output->write($data)
 );
 
 $readable->on(

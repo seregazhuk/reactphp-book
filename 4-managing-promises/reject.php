@@ -8,7 +8,5 @@ $deferred->resolve('my-value');
 $promise = React\Promise\reject($deferred->promise());
 $promise->then(
     null,
-    function ($reason) {
-        echo 'Promise was rejected with: ' . $reason . PHP_EOL;
-    }
+    fn($reason) => print "Promise was rejected with: $reason\n"
 );

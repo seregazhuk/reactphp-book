@@ -6,12 +6,8 @@ $deferred = new React\Promise\Deferred();
 
 $promise = $deferred->promise();
 $promise->done(
-    function ($data) {
-        echo 'Done: ' . $data . PHP_EOL;
-    },
-    function ($data) {
-        echo 'Reject: ' . $data . PHP_EOL;
-    }
+    fn ($data) => print 'Done: ' . $data . PHP_EOL,
+    fn ($data) => print 'Reject: ' . $data . PHP_EOL
 );
 
 $deferred->reject('hello world');

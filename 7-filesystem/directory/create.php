@@ -10,12 +10,8 @@ $filesystem = Filesystem::create($loop);
 $dir = $filesystem->dir('new');
 
 $dir->create()->then(
-    function () {
-        echo 'Created' . PHP_EOL;
-    },
-    function (Exception $e) {
-        echo 'Error: ' . $e->getMessage() . PHP_EOL;
-    }
+    fn() => print "Created\n",
+    fn(Exception $e) => print "Error: {$e->getMessage()}\n"
 );
 
 $loop->run();

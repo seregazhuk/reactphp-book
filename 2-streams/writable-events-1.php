@@ -9,9 +9,7 @@ var_dump($writable->write("Hello world\n"));
 
 $writable->on(
     'drain',
-    function () {
-        echo "The stream is drained\n";
-    }
+    fn () => print "The stream is drained\n"
 );
 
 $loop->run();

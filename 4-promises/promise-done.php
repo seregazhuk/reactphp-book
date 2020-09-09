@@ -6,9 +6,7 @@ $deferred = new React\Promise\Deferred();
 
 $promise = $deferred->promise();
 $promise->done(
-    function ($data) {
-        echo 'Done: ' . $data . PHP_EOL;
-    }
+    fn ($data) => print 'Done: ' . $data . PHP_EOL
 );
 
 $deferred->resolve('hello world');

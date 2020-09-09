@@ -8,10 +8,10 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 $loop = Factory::create();
 $filesystem = Filesystem::create($loop);
 
-$file = $filesystem->file('test.txt')->remove()->then(
-    function () {
-        echo 'File was removed' . PHP_EOL;
-    }
-);
+$file = $filesystem->file('test.txt')
+    ->remove()
+    ->then(
+        fn() => print 'File was removed' . PHP_EOL
+    );
 
 $loop->run();

@@ -10,13 +10,7 @@ $stream->on(
     function ($data) use ($stream, $loop) {
         echo $data, "\n";
         $stream->pause();
-
-        $loop->addTimer(
-            1,
-            function () use ($stream) {
-                $stream->resume();
-            }
-        );
+        $loop->addTimer(1, fn() => $stream->resume());
     }
 );
 

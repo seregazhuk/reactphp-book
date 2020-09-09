@@ -10,28 +10,14 @@ $pending = [
     $secondResolver->promise(),
 ];
 
-$promise = \React\Promise\race($pending)->then(
-    function ($resolved) {
-        echo 'resolved with' . $resolved . PHP_EOL;
-    },
-    function ($failed) {
-        echo 'failed with' . $failed;
-    }
-);
-
+$promise = \React\Promise\race($pending)
+    ->then(
+        fn($resolved) => print 'Resolved with: ' . $resolved . PHP_EOL,
+        fn($reason) => print 'Failed with: ' . $reason . PHP_EOL
+    );
 
 $loop = \React\EventLoop\Factory::create();
-$loop->addTimer(
-    2,
-    function () use ($firstResolver) {
-        $firstResolver->resolve(10);
-    }
-);
-$loop->addTimer(
-    1,
-    function () use ($secondResolver) {
-        $secondResolver->reject(20);
-    }
-);
+$loop->addTimer(2, fn() => $firstResolver->resolve(10));
+$loop->addTimer(1, fn() => $secondResolver->reject(20));
 
 $loop->run();
