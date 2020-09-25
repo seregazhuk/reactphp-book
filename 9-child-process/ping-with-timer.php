@@ -16,18 +16,7 @@ $process->stdout->on(
     }
 );
 
-$loop->addTimer(
-    3,
-    function () use ($process) {
-        $process->terminate();
-    }
-);
-
-$process->on(
-    'exit',
-    function () {
-        echo 'Process exited';
-    }
-);
+$loop->addTimer(3, fn() => $process->terminate());
+$process->on('exit', fn() => print 'Process exited');
 
 $loop->run();
