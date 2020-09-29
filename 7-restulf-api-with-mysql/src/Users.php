@@ -17,12 +17,9 @@ final class Users
 
     public function all(): PromiseInterface
     {
-        return $this->db->query('SELECT id, name, email FROM users ORDER BY id')
-            ->then(
-                function (QueryResult $queryResult) {
-                    return $queryResult->resultRows;
-                }
-            );
+        return $this->db
+            ->query('SELECT id, name, email FROM users ORDER BY id')
+            ->then(fn(QueryResult $queryResult) => $queryResult->resultRows);
     }
 
     public function find(string $id): PromiseInterface
